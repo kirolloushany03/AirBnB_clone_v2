@@ -57,5 +57,5 @@ class FileStorage:
         return
 
       key = f'{type(obj).__name__}.{obj.id}'
-      if f'{type(obj).__name__}.{obj.id}' in FileStorage.__objects:
+      if key in FileStorage.__objects:
         del FileStorage.__objects[key]
