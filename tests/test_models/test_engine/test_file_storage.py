@@ -110,6 +110,7 @@ class test_fileStorage(unittest.TestCase):
         self.assertEqual(type(storage), FileStorage)
 
     def test_delete_exists(self):
+      ''' '''
       objs_before = len(storage.all().keys())
       new = BaseModel()
       self.assertEqual(len(storage.all().keys()), objs_before + 1)
@@ -117,6 +118,7 @@ class test_fileStorage(unittest.TestCase):
       self.assertEqual(len(storage.all().keys()), objs_before)
 
     def test_delete_not_exists(self):
+      ''' '''
       objs_before = len(storage.all().keys())
       new = BaseModel()
       key = f'{type(new).__name__}.{new.id}'
@@ -127,6 +129,7 @@ class test_fileStorage(unittest.TestCase):
       self.assertEqual(len(storage.all().keys()), objs_before)
 
     def test_delete_None(self):
+      ''' '''
       objs_before = len(storage.all().keys())
       new = BaseModel()
       self.assertEqual(len(storage.all().keys()), objs_before + 1)
@@ -134,6 +137,7 @@ class test_fileStorage(unittest.TestCase):
       self.assertEqual(len(storage.all().keys()), objs_before + 1)
 
     def test_all_w_param(self):
+      ''' '''
       for _ in range(5):
         new = State()
 
