@@ -14,14 +14,14 @@ from models.review import Review
 
 def parse_value(s):
     try:
-      return int(s)
+        return int(s)
     except ValueError:
-      pass
+        pass
 
     try:
-      return float(s)
+        return float(s)
     except ValueError:
-      pass
+        pass
 
     if not (s.startswith('"') and s.endswith('"')):
         return None
@@ -153,13 +153,13 @@ class HBNBCommand(cmd.Cmd):
 
         params = args_partitions[2].split(" ")
         for param in params:
-          param_parts = param.partition('=')
-          if not hasattr(new_instance, param_parts[0]):
-            continue
-          value = parse_value(param_parts[2])
-          if value is None:
-            continue
-          kwargs[param_parts[0]] = value
+            param_parts = param.partition('=')
+            if not hasattr(new_instance, param_parts[0]):
+                continue
+            value = parse_value(param_parts[2])
+            if value is None:
+                continue
+            kwargs[param_parts[0]] = value
 
         new_instance.__dict__.update(**kwargs)
 
@@ -228,7 +228,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            del(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -360,6 +360,7 @@ class HBNBCommand(cmd.Cmd):
         """ Help information for the update class """
         print("Updates an object with new information")
         print("Usage: update <className> <id> <attName> <attVal>\n")
+
 
 if __name__ == "__main__":
     HBNBCommand().cmdloop()
