@@ -143,15 +143,15 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
             return
 
-        args_parts = args.partition(" ")
-        if args_parts[0] not in HBNBCommand.classes:
+        args_partitions = args.partition(" ")
+        if args_partitions[0] not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = HBNBCommand.classes[args_parts[0]]()
+        new_instance = HBNBCommand.classes[args_partitions[0]]()
         kwargs = {}
 
-        params = args_parts[2].split(" ")
+        params = args_partitions[2].split(" ")
         for param in params:
           param_parts = param.partition('=')
           if not hasattr(new_instance, param_parts[0]):
