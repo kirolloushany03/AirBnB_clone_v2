@@ -17,7 +17,7 @@ class test_Console(test_basemodel):
           '123.4',
           '"a_b_c"',
           '"a\\"s"',
-          '"\\""',
+          '"\\"\'"',
           '"\\"',
           'lol'
         ]
@@ -26,7 +26,7 @@ class test_Console(test_basemodel):
             123.4,
             'a b c',
             'a"s',
-            '"',
+            '"\'',
             None,
             None
         ]
