@@ -27,8 +27,9 @@ place_amenity = Table(
 
 
 class Place(BaseModel, Base):
-    """ A class representing a place in the HBNB project """
-    __tablename__ = 'places'
+    """A class representing a place in the HBNB project"""
+
+    __tablename__ = "places"
 
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
@@ -48,10 +49,7 @@ class Place(BaseModel, Base):
     )
 
     amenities = relationship(
-        'Amenity',
-        secondary=place_amenity,
-        viewonly=False
-    )
+        "Amenity", secondary=place_amenity, viewonly=False)
 
     amenity_ids = []
 
