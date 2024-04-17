@@ -25,7 +25,7 @@ class DBStorage:
     def all(self, cls=None):
         '''get a dictionary that contains all objects stored in the current session'''
         if cls is None:
-            queries = chain(self.__session.query(State), self.__session.query(City), self.__session.query(User))
+            queries = chain(self.__session.query(State), self.__session.query(City), self.__session.query(User), self.__session.query(Place))
         else:
             queries = self.__session.query(cls)
 
@@ -33,7 +33,6 @@ class DBStorage:
 
     def new(self, obj):
         '''add obj to the current session'''
-        print('calling new')
         self.__session.add(obj)
 
     def save(self):
