@@ -4,17 +4,32 @@ from models.base_model import BaseModel, Base
 from sqlalchemy import Column, String, Integer, Float, ForeignKey, Table
 from sqlalchemy.orm import relationship
 
-# Create the table to establish a Many-to-Many relationship between Place and Amenity
+# Create the table to establish a Many-to-Many
+# relationship between Place and Amenity
 place_amenity = Table(
-    'place_amenity',
+    "place_amenity",
     Base.metadata,
-    Column('place_id', String(60), ForeignKey('places.id'), primary_key=True, nullable=False),
-    Column('amenity_id', String(60), ForeignKey('amenities.id'), primary_key=True, nullable=False)
+    Column(
+        "place_id",
+        String(60),
+        ForeignKey("places.id"),
+        primary_key=True,
+        nullable=False,
+    ),
+    Column(
+        "amenity_id",
+        String(60),
+        ForeignKey("amenities.id"),
+        primary_key=True,
+        nullable=False,
+    ),
 )
 
+
 class Place(BaseModel, Base):
-    """ A class representing a place in the HBNB project """
-    __tablename__ = 'places'
+    """A class representing a place in the HBNB project"""
+
+    __tablename__ = "places"
 
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
@@ -27,26 +42,35 @@ class Place(BaseModel, Base):
     latitude = Column(Float)
     longitude = Column(Float)
 
-    user = relationship('User')
-    city = relationship('City')
-    reviews = relationship('Review', back_populates="place", cascade="all, delete, delete-orphan")
-
-    amenities = relationship(
-        'Amenity',
-        secondary=place_amenity,
-        viewonly=False
+    user = relationship("User")
+    city = relationship("City")
+    reviews = relationship(
+        "Review", back_populates="place", cascade="all, delete, delete-orphan"
     )
 
     amenity_ids = []
 
+
+    amenities = relationship(
+        "Amenity",
+        econdary=place_amenity,
+        back_populates='place_amenities',
+        viewonly=False
+    )
+
+
     @property
     def amenities(self):
-        """Return the list of Amenity instances based on the amenity_ids list."""
+        """Return the list of Amenity instances
+        based on the amenity_ids list."""
         from models import storage
 
         from models.amenity import Amenity
+
         all_amenities = storage.all(Amenity)
-        amenities_list = list(map(lambda id: all_amenities[f'Amenity.{id}'], self.amenity_ids))
+        amenities_list = list(
+            map(lambda id: all_amenities[f"Amenity.{id}"], self.amenity_ids)
+        )
         return amenities_list
 
     @amenities.setter
