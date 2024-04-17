@@ -27,9 +27,8 @@ place_amenity = Table(
 
 
 class Place(BaseModel, Base):
-    """A class representing a place in the HBNB project"""
-
-    __tablename__ = "places"
+    """ A class representing a place in the HBNB project """
+    __tablename__ = 'places'
 
     city_id = Column(String(60), ForeignKey("cities.id"), nullable=False)
     user_id = Column(String(60), ForeignKey("users.id"), nullable=False)
@@ -49,7 +48,9 @@ class Place(BaseModel, Base):
     )
 
     amenities = relationship(
-        "Amenity", secondary=place_amenity, back_populates="places", viewonly=False
+        'Amenity',
+        secondary=place_amenity,
+        viewonly=False
     )
 
     amenity_ids = []
@@ -69,7 +70,7 @@ class Place(BaseModel, Base):
         return amenities_list
 
     @amenities.setter
-    def amenities(self, obj):
+    def append(self, obj):
         """Add an Amenity instance to the list of amenities."""
         from models.amenity import Amenity
 
