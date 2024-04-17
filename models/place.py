@@ -21,3 +21,4 @@ class Place(BaseModel, Base):
 
     user = relationship('User')
     city = relationship('City')
+    reviews = relationship('Review', back_populates="place", cascade="all, delete, delete-orphan")
