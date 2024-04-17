@@ -3,6 +3,7 @@
 from sqlalchemy.engine import create_engine
 from models.city import City
 from models.state import State
+from models.user import User
 from sqlalchemy.orm import sessionmaker, scoped_session
 from os import environ
 from itertools import chain
@@ -24,9 +25,10 @@ class DBStorage:
         '''get a dictionary that contains all objects stored in the current session'''
         from models.city import City
         from models.state import State
+        from models.user import User
 
         if cls is None:
-            queries = chain(self.__session.query(State), self.__session.query(City))
+            queries = chain(self.__session.query(State), self.__session.query(City), self.__session.query(User))
         else:
             queries = self.__session.query(cls)
 
