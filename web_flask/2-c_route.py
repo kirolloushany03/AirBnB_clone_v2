@@ -17,6 +17,7 @@ def hbnb():
     """/hbnb route : dispaly HBNB"""
     return "HBNB"
 
+
 @app.route("/c/<text>", strict_slashes=False)
 def dynamic_c_route(text):
     """/dynamic c route : dispaly HBNB"""
