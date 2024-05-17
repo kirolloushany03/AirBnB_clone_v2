@@ -21,7 +21,7 @@ def hbnb():
 def dynamic_c_route(text):
     """/dynamic c route : dispaly HBNB"""
     text = text.replace("_", " ")
-    return "C {text}"
+    return f"C {text}"
 
 
 if __name__ == "__main__":
