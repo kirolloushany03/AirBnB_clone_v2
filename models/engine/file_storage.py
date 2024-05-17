@@ -65,3 +65,8 @@ class FileStorage:
         key = f"{type(obj).__name__}.{obj.id}"
         if key in FileStorage.__objects:
             del FileStorage.__objects[key]
+
+    def close(self):
+            """ calls reload() to :eserializing the JSON file to objects
+            """
+            self.reload()
