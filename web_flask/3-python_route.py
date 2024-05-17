@@ -26,7 +26,7 @@ def dynamic_c_route(text):
 
 
 @app.route("/python/<text>", strict_slashes=False)
-def dynamic_python_route(text):
+def dynamic_python_route(text="is cool"):
     """/dynamic c route : dispaly HBNB"""
     text = text.replace("_", " ")
     return f"Python {text}"
