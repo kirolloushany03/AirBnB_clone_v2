@@ -1,39 +1,17 @@
 #!/usr/bin/python3
+
 """ Console Module """
 import cmd
 import sys
-from models.base_model import BaseModel
+import shlex
 from models.__init__ import storage
+from models.base_model import BaseModel
 from models.user import User
 from models.place import Place
 from models.state import State
 from models.city import City
 from models.amenity import Amenity
 from models.review import Review
-
-
-def parse_value(s):
-    try:
-        return int(s)
-    except ValueError:
-        pass
-
-    try:
-        return float(s)
-    except ValueError:
-        pass
-
-    if not (s.startswith('"') and s.endswith('"')):
-        return None
-
-    try:
-        parsed_string = s[1:-1]
-        parsed_string = parsed_string.replace('\\"', '"')
-        if '\\' in parsed_string:
-            return None
-        return parsed_string.replace("_", " ")
-    except Exception:
-        return None
 
 
 class HBNBCommand(cmd.Cmd):
@@ -43,16 +21,16 @@ class HBNBCommand(cmd.Cmd):
     prompt = '(hbnb) ' if sys.__stdin__.isatty() else ''
 
     classes = {
-               'BaseModel': BaseModel, 'User': User, 'Place': Place,
-               'State': State, 'City': City, 'Amenity': Amenity,
-               'Review': Review
-              }
+        'BaseModel': BaseModel, 'User': User, 'Place': Place,
+        'State': State, 'City': City, 'Amenity': Amenity,
+        'Review': Review
+    }
     dot_cmds = ['all', 'count', 'show', 'destroy', 'update']
     types = {
-             'number_rooms': int, 'number_bathrooms': int,
-             'max_guest': int, 'price_by_night': int,
-             'latitude': float, 'longitude': float
-            }
+        'number_rooms': int, 'number_bathrooms': int,
+        'max_guest': int, 'price_by_night': int,
+        'latitude': float, 'longitude': float
+    }
 
     def preloop(self):
         """Prints if isatty is false"""
@@ -137,31 +115,37 @@ class HBNBCommand(cmd.Cmd):
         """ Overrides the emptyline method of CMD """
         pass
 
-    def do_create(self, args: str):
+    def do_create(self, args):
         """ Create an object of any class"""
         if not args:
             print("** class name missing **")
             return
+        args_parts = shlex.split(args)
+        className = args_parts[0]  # state
+        pairs = args_parts[1:]  # ['name=Cairo', 'id=4dc46rec']
 
-        args_partitions = args.partition(" ")
-        if args_partitions[0] not in HBNBCommand.classes:
+        if className not in HBNBCommand.classes:
             print("** class doesn't exist **")
             return
 
-        new_instance = HBNBCommand.classes[args_partitions[0]]()
-        kwargs = {}
+        # now obj created- set attr
+        new_instance = HBNBCommand.classes[className]()
+        # loop key value pairs to extract each and setattr of new obj
+        for pair in pairs:
+            parts = pair.split("=")
 
-        params = args_partitions[2].split(" ")
-        for param in params:
-            param_parts = param.partition('=')
-            if not hasattr(new_instance, param_parts[0]):
-                continue
-            value = parse_value(param_parts[2])
-            if value is None:
-                continue
-            kwargs[param_parts[0]] = value
+            attr_name = parts[0]
+            attr_value = parts[1]
+            # remove internal double quotes
+            attr_value = attr_value.replace('"', r'\"')
+            attr_value = attr_value.replace('_', ' ')
 
-        new_instance.__dict__.update(**kwargs)
+            if '.' in attr_value:
+                attr_value = float(attr_value)
+            elif attr_value.isdigit():
+                attr_value = int(attr_value)
+            else:
+                setattr(new_instance, attr_name, attr_value)
 
         new_instance.save()
         print(new_instance.id)
@@ -195,7 +179,7 @@ class HBNBCommand(cmd.Cmd):
 
         key = c_name + "." + c_id
         try:
-            print(storage.all()[key])
+            print(storage._FileStorage__objects[key])
         except KeyError:
             print("** no instance found **")
 
@@ -227,7 +211,7 @@ class HBNBCommand(cmd.Cmd):
         key = c_name + "." + c_id
 
         try:
-            storage.delete(storage.all()[key])
+            del (storage.all()[key])
             storage.save()
         except KeyError:
             print("** no instance found **")
@@ -246,11 +230,12 @@ class HBNBCommand(cmd.Cmd):
             if args not in HBNBCommand.classes:
                 print("** class doesn't exist **")
                 return
-            for k, v in storage.all().items():
+
+            for k, v in storage.all(HBNBCommand.classes[args]).items():
                 if k.split('.')[0] == args:
                     print_list.append(str(v))
         else:
-            for k, v in storage.all().items():
+            for k, v in storage.all():
                 print_list.append(str(v))
 
         print(print_list)
@@ -263,8 +248,7 @@ class HBNBCommand(cmd.Cmd):
     def do_count(self, args):
         """Count current number of class instances"""
         count = 0
-
-        for k, v in storage.all().items():
+        for k, v in storage._FileStorage__objects.items():
             if args == k.split('.')[0]:
                 count += 1
         print(count)
